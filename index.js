@@ -20,6 +20,13 @@ async function run() {
     try {
         await client.connect()
 
+        const productsCollection = client.db('Moto-Monster').collection('all-products')
+
+        app.get('/products', async (req, res) => {
+            const products = await productsCollection.find().toArray()
+            res.send(products)
+        })
+
 
     }
     finally {
