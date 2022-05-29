@@ -23,6 +23,7 @@ async function run() {
         const productsCollection = client.db('Moto-Monster').collection('all-products')
         const ordersCollection = client.db('Moto-Monster').collection('orders')
         const reviewsCollection = client.db('Moto-Monster').collection('reviews')
+        const userInfoCollection = client.db('Moto-Monster').collection('user-info')
 
         app.get('/products', async (req, res) => {
             const products = await productsCollection.find().toArray()
@@ -39,7 +40,7 @@ async function run() {
 
         app.post('/orders', async (req, res) => {
             const order = req.body
-            const result = ordersCollection.insertOne(order)
+            const result = await ordersCollection.insertOne(order)
             res.send(result)
         })
 
@@ -77,7 +78,7 @@ async function run() {
 
         app.post('/reviews', async (req, res) => {
             const review = req.body
-            const result = reviewsCollection.insertOne(review)
+            const result = await reviewsCollection.insertOne(review)
             res.send(result)
         })
 
@@ -86,7 +87,17 @@ async function run() {
             res.send(reviews)
         })
 
-
+        app.put('/users/:email', async (req, res) => {
+            const email = req.params.email
+            const userInfo = req.body
+            const filter = { email: email }
+            const options = { upsert: true }
+            const updateDoc = {
+                $set: userInfo,
+            }
+            const result = await userInfoCollection.updateOne(filter, updateDoc, options)
+            res.send(result)
+        })
 
 
     }
