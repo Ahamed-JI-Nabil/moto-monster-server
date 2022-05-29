@@ -23,6 +23,7 @@ async function run() {
         const productsCollection = client.db('Moto-Monster').collection('all-products')
         const ordersCollection = client.db('Moto-Monster').collection('orders')
 
+
         app.get('/products', async (req, res) => {
             const products = await productsCollection.find().toArray()
             res.send(products)
@@ -62,6 +63,14 @@ async function run() {
                 }
             }
             const result = await productsCollection.updateOne(query, updatedDoc, options)
+            res.send(result)
+        })
+
+
+        app.delete('/orders/:id', async (req, res) => {
+            const id = req.params.id
+            const query = { _id: ObjectId(id) }
+            const result = await ordersCollection.deleteOne(query)
             res.send(result)
         })
 
