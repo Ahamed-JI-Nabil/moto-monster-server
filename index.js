@@ -100,6 +100,25 @@ async function run() {
         })
 
 
+        app.get('/users', async (req, res) => {
+            const users = await userInfoCollection.find().toArray()
+            res.send(users)
+        })
+
+
+
+        app.put('/users/admin/:email', async (req, res) => {
+            const email = req.params.email
+            const filter = { email: email }
+            const options = { upsert: true }
+            const updateDoc = {
+                $set: { role: 'admin' },
+            }
+            const result = await userInfoCollection.updateOne(filter, updateDoc, options)
+            res.send(result)
+        })
+
+
     }
     finally {
 
