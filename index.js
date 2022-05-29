@@ -22,7 +22,7 @@ async function run() {
 
         const productsCollection = client.db('Moto-Monster').collection('all-products')
         const ordersCollection = client.db('Moto-Monster').collection('orders')
-
+        const reviewsCollection = client.db('Moto-Monster').collection('reviews')
 
         app.get('/products', async (req, res) => {
             const products = await productsCollection.find().toArray()
@@ -72,6 +72,18 @@ async function run() {
             const query = { _id: ObjectId(id) }
             const result = await ordersCollection.deleteOne(query)
             res.send(result)
+        })
+
+
+        app.post('/reviews', async (req, res) => {
+            const review = req.body
+            const result = reviewsCollection.insertOne(review)
+            res.send(result)
+        })
+
+        app.get('/reviews', async (req, res) => {
+            const reviews = await reviewsCollection.find().toArray()
+            res.send(reviews)
         })
 
 
